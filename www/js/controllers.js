@@ -1,41 +1,84 @@
 angular.module('starter.controllers', [])
-.controller('GameCtrl', function($scope){
+.controller('PreGameCtrl', function($scope, $state){
+  $scope.init_game = function () {
+    alert("evento random...");
+    $state.go('app.game')
+  }
+})
+.controller('GameCtrl', function($scope, $ionicModal){
+  $scope.modal_random_clouse = function () {
+    $scope.modal_random_event.hide();
+  }
+  $scope.random_event= "algo"
+  $ionicModal.fromTemplateUrl('templates/modal_random.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal_random_event = modal;
+    $scope.modal_random_event.show();
+  });
 
-  $scope.alien_preference = [1, 2, 4, 5];
-
+/////funcion inicial////
+$scope.alien_preference =  randomCards();
+console.log($scope.alien_preference);
+////fin funcion inicial
+  $scope.buttonpositive = "button-positive";
   $scope.players = ['blue', 'red', 'green', 'yellow'];
-
+  $scope.player_num = 0;
+  $scope.player_now = $scope.players[$scope.player_num];
+  $scope.round = 1;
+  $scope.turn = 0;
   $scope.player_blue_cards = [];
-  $scope.read = function (player) {
-      console.log(player);
+  alert("Turno jugador: "+$scope.player_now);
+  $scope.read = function () {
+      $scope.turn++;
+
       var count = 0;
       var asserts = 0;
       var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5  });
       scanner.addListener('scan', function (content) {
         alert("Marciano vio carta");
+        var audio = document.createElement('audio');
+        audio.style.display = "none";
+        audio.src = "https://benefitstorage.blob.core.windows.net/media/007741330_prev.mp3";
+        audio.autoplay = true;
+        audio.onended = function(){
+          audio.remove() //Remove when played.
+        };
+        document.body.appendChild(audio);
+
         for (i of $scope.alien_preference ) {
           if (i == content) asserts++;
         }
 
         count++;
         console.log(count);
-        if (count==4) {
-          console.log(player);
 
+        if (count==4) {
           scanner.stop();
-          alert("Player "+player+" asserts: "+asserts);
-          switch (player) {
+          alert("Player "+$scope.player_now+" asserts: "+asserts);
+          $scope.player_num++;
+          console.log($scope.player_num);
+          $scope.player_now = $scope.players[$scope.player_num];
+
+          console.log($scope.player_now );
+          alert("turno jugardor: "+$scope.player_now );
+
+          switch ($scope.player_now) {
             case 'blue':
               $player_blue_asserts = asserts;
+              $scope.buttonpositive = "button-assertive";
               break;
             case 'red':
               $player_red_asserts = asserts;
+              $scope.buttonpositive = "button-balanced";
               break;
             case 'green':
               $player_green_asserts = asserts;
+              $scope.buttonpositive = "button-energized";
               break;
             case 'yellow':
               $player_yellow_asserts = asserts;
+              $scope.buttonpositive = "button-positive";
               break;
           }
         };
@@ -43,7 +86,7 @@ angular.module('starter.controllers', [])
       Instascan.Camera.getCameras().then(function (cameras) {
         if (cameras.length > 0) {
 
-          scanner.start(cameras[0]);
+          scanner.start(cameras[1]);
         } else {
           alert('No cameras found.');
         }
@@ -52,12 +95,21 @@ angular.module('starter.controllers', [])
       });
 
 
+
   }
 })
 .controller('HomeCtrl', function($scope, $state){
+  var audio = document.createElement('audio');
+  audio.style.display = "none";
+  audio.src = "https://benefitstorage.blob.core.windows.net/media/xfiles-expedientes-x-series-tv-.mp3";
+  audio.autoplay = true;
+  audio.onended = function(){
+    audio.remove() //Remove when played.
+  };
+  document.body.appendChild(audio);
   $scope.init = function() {
-    alert("Iniciando Juego");
-    $state.go('app.game');
+
+    $state.go('app.pregame');
   };
 })
 .controller('ReaderCtrl', function($scope, $state){

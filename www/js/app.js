@@ -58,6 +58,15 @@ views: {
   }
 }
 })
+.state('app.pregame', {
+url: '/pregame',
+views: {
+  'menuContent': {
+    templateUrl: 'templates/pregame.html',
+    controller: 'PreGameCtrl'
+  }
+}
+})
 
   .state('app.search', {
     url: '/search',
