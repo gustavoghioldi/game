@@ -1,12 +1,75 @@
 angular.module('starter.controllers', [])
-.controller('ReaderCtrl', function($scope){
+.controller('GameCtrl', function($scope){
+
+  $scope.alien_preference = [1, 2, 4, 5];
+
+  $scope.players = ['blue', 'red', 'green', 'yellow'];
+
+  $scope.player_blue_cards = [];
+  $scope.read = function (player) {
+      console.log(player);
+      var count = 0;
+      var asserts = 0;
+      var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5  });
+      scanner.addListener('scan', function (content) {
+        alert("Marciano vio carta");
+        for (i of $scope.alien_preference ) {
+          if (i == content) asserts++;
+        }
+
+        count++;
+        console.log(count);
+        if (count==4) {
+          console.log(player);
+
+          scanner.stop();
+          alert("Player "+player+" asserts: "+asserts);
+          switch (player) {
+            case 'blue':
+              $player_blue_asserts = asserts;
+              break;
+            case 'red':
+              $player_red_asserts = asserts;
+              break;
+            case 'green':
+              $player_green_asserts = asserts;
+              break;
+            case 'yellow':
+              $player_yellow_asserts = asserts;
+              break;
+          }
+        };
+      });
+      Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+
+          scanner.start(cameras[0]);
+        } else {
+          alert('No cameras found.');
+        }
+      }).catch(function (e) {
+        console.error(e);
+      });
+
+
+  }
+})
+.controller('HomeCtrl', function($scope, $state){
+  $scope.init = function() {
+    alert("Iniciando Juego");
+    $state.go('app.game');
+  };
+})
+.controller('ReaderCtrl', function($scope, $state){
   var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5  });
   scanner.addListener('scan', function (content) {
     alert(content);
+    $state.go('app.playlists');
   });
   Instascan.Camera.getCameras().then(function (cameras) {
     if (cameras.length > 0) {
-      scanner.start(cameras[1]);
+
+      scanner.start(cameras[0]);
     } else {
       alert('No cameras found.');
     }
@@ -54,18 +117,4 @@ angular.module('starter.controllers', [])
       $scope.closeLogin();
     }, 1000);
   };
-})
-
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-
-.controller('PlaylistCtrl', function($scope, $stateParams) {
 });

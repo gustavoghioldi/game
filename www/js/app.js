@@ -31,6 +31,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
     templateUrl: 'templates/menu.html',
     controller: 'AppCtrl'
   })
+  .state('app.home', {
+    url: '/home',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/home.html',
+        controller: 'HomeCtrl'
+      }
+    }
+  })
   .state('app.reader', {
   url: '/reader',
   views: {
@@ -39,6 +48,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
       controller: 'ReaderCtrl'
     }
   }
+})
+.state('app.game', {
+url: '/game',
+views: {
+  'menuContent': {
+    templateUrl: 'templates/game.html',
+    controller: 'GameCtrl'
+  }
+}
 })
 
   .state('app.search', {
@@ -58,25 +76,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
         }
       }
     })
-    .state('app.playlists', {
-      url: '/playlists',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
-      }
-    }
-  });
+;
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/home');
 });
