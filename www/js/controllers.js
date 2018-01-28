@@ -1,20 +1,19 @@
 angular.module('starter.controllers', [])
 .controller('PreGameCtrl', function($scope, $state){
   $scope.init_game = function () {
-    alert("evento random...");
     $state.go('app.game')
   }
 })
 .controller('GameCtrl', function($scope, $ionicModal){
   $scope.modal_random_clouse = function () {
-    $scope.modal_random_event.hide();
+    $scope.modal_event.hide();
   }
   $scope.random_event= "algo"
   $ionicModal.fromTemplateUrl('templates/modal_random.html', {
     scope: $scope
   }).then(function(modal) {
-    $scope.modal_random_event = modal;
-    $scope.modal_random_event.show();
+    $scope.modal_event = modal;
+    $scope.modal_event.show();
   });
 
 /////funcion inicial////
@@ -26,12 +25,10 @@ console.log($scope.alien_preference);
   $scope.player_num = 0;
   $scope.player_now = $scope.players[$scope.player_num];
   $scope.round = 1;
-  $scope.turn = 0;
-  $scope.player_blue_cards = [];
+  $scope.turn = 1;
+
   alert("Turno jugador: "+$scope.player_now);
   $scope.read = function () {
-      $scope.turn++;
-
       var count = 0;
       var asserts = 0;
       var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5  });
@@ -55,13 +52,12 @@ console.log($scope.alien_preference);
 
         if (count==4) {
           scanner.stop();
-          alert("Player "+$scope.player_now+" asserts: "+asserts);
+
+          alert("Player "+$scope.player_now+"\nCartas correctas: "+asserts);
           $scope.player_num++;
           console.log($scope.player_num);
           $scope.player_now = $scope.players[$scope.player_num];
 
-          console.log($scope.player_now );
-          alert("turno jugardor: "+$scope.player_now );
 
           switch ($scope.player_now) {
             case 'blue':
@@ -81,8 +77,16 @@ console.log($scope.alien_preference);
               $scope.buttonpositive = "button-positive";
               break;
           }
+          $scope.turn++;
+          if ($scope.turn % 16 == 0) {
+            $scope.random_event = "otro evento";
+            $scope.modal_event.show();
+            $scope.round++;
+          }
+          alert("turno jugardor: "+$scope.player_now );
         };
       });
+
       Instascan.Camera.getCameras().then(function (cameras) {
         if (cameras.length > 0) {
 
@@ -93,6 +97,7 @@ console.log($scope.alien_preference);
       }).catch(function (e) {
         console.error(e);
       });
+
 
 
 
