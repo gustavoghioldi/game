@@ -49,40 +49,34 @@ console.log($scope.alien_preference);
 
         count++;
         console.log(count);
+        $scope.turn++;
 
         if (count==4) {
           scanner.stop();
+          console.log($scope.turn);
 
-          alert("Player "+$scope.player_now+"\nCartas correctas: "+asserts);
+
+          $scope.random_event = "Player "+$scope.player_now+"\nCartas correctas: "+asserts;
+          $scope.modal_event.show();
           $scope.player_num++;
           console.log($scope.player_num);
           $scope.player_now = $scope.players[$scope.player_num];
 
+          if ($scope.turn == (16*3))
+          {
+            alert("Me voy a casa.. el marciano espera")
+            $state.go('app.home');
+          }
 
-          switch ($scope.player_now) {
-            case 'blue':
-              $player_blue_asserts = asserts;
-              $scope.buttonpositive = "button-assertive";
-              break;
-            case 'red':
-              $player_red_asserts = asserts;
-              $scope.buttonpositive = "button-balanced";
-              break;
-            case 'green':
-              $player_green_asserts = asserts;
-              $scope.buttonpositive = "button-energized";
-              break;
-            case 'yellow':
-              $player_yellow_asserts = asserts;
-              $scope.buttonpositive = "button-positive";
-              break;
-          }
-          $scope.turn++;
           if ($scope.turn % 16 == 0) {
-            $scope.random_event = "otro evento";
-            $scope.modal_event.show();
+
             $scope.round++;
+            alert("comienzo de Round "+$scope.round);
           }
+
+          if ($scope.player_num == 3) {
+            $scope.player_num=0;
+          };
           alert("turno jugardor: "+$scope.player_now );
         };
       });
